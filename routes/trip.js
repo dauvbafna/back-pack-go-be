@@ -4,10 +4,11 @@ const mongoose = require('mongoose');
 const Trip = require('../models/trip');
 const Destination = require('../models/destination');
 const Itinerary = require('../models/itinerary');
+const User = require('../models/user');
 
 
 router.get('/', (req, res, next) => {
-  Trip.find({})
+  Trip.find({ users: req.session.currentUser._id})
   .then((result) => {
     res.json(result);
   })
@@ -35,6 +36,7 @@ router.post('/create', (req, res, next) => {
 
 router.get('/:id', (req, res, next) => {
   Trip.findById(req.params.id)
+  .populate("users")
   .then((result) => {
     res.json(result);
   })
@@ -86,5 +88,24 @@ router.put('/itinerary/:id', (req, res, next) => {
   })
     .catch(next);
 });
+
+router.post('/:id/invite', (req, res, next) => {
+  if (!req.session.currentUser) {
+    return res.status(401).json({code: 'unauthorized'});
+  }
+
+  User.findOne({username: req.body.user})
+    .then((user) => {
+      if (!user) {
+        return res.status(404).json({code: 'not-found'});
+      }
+      return Trip.findByIdAndUpdate(req.params.id, {$push:{users:user._id}})
+      })
+    .then(()=>{
+      res.status(204).json({code: 'okay'});
+    })
+    .catch(next);
+});
+
 
 module.exports = router;

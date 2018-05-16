@@ -6,6 +6,10 @@
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www"
   },
+  "engines": {
+    "node": "x.x.x",
+    "npm": "x.x.x"
+  },
   "dependencies": {
     "bcrypt": "^2.0.1",
     "body-parser": "~1.16.0",
@@ -13,6 +17,7 @@
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.1",
     "debug": "~2.6.0",
+    "dotenv": "^5.0.1",
     "ejs": "~2.5.5",
     "express": "~4.14.1",
     "express-ejs-layouts": "~2.2.0",
